@@ -9,10 +9,10 @@ QT       += webkit
 QT       += network
 QT       += sql
 
-INCLUDEPATH += "../json/include"
-LIBS        += "../json/lib/json_vc71_libmt.lib"
-INCLUDEPATH += "../include"
-LIBS += "../lib/opt/libmysql.lib"
+INCLUDEPATH += "../lib3party/json/include"
+LIBS        += "../lib3party/json/lib/json_vc71_libmt.lib"
+INCLUDEPATH += "../lib3party/mysql/include"
+LIBS += "../lib3party/mysql/lib/opt/libmysql.lib"
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
