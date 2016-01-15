@@ -18,7 +18,7 @@ void CDBData::Init()
     GetTableConfig();
     qDebug() << time.elapsed()/1000.0<<"s";
     time.restart();
-    ConnectDB();
+    //ConnectDB();
     qDebug() << time.elapsed()/1000.0<<"s";
    // m_SQuFu = {"w653", "w654", "w817", "w818", "w820", "w821", "w824", "w828", "w829", "w898", "w899"};
     m_SQuFu.insert("w653");
