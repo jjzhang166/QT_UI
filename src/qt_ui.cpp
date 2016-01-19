@@ -2,12 +2,18 @@
 
 CQTui::CQTui(QObject *parent):QObject(parent)
 {
-
+    QDir::setCurrent("./html");
 }
 
 CQTui::~CQTui()
 {
-
+    map<string, MYSQL*>::iterator iter = m_DBConnetor.begin();
+    for (; iter != m_DBConnetor.end(); ++iter)
+    {
+        MYSQL *conn = iter->second;
+        mysql_close(conn);
+    }
+    m_DBConnetor.clear();
 }
 
 QString CQTui::connectMysql(QString Name, QString Host, QString User,
@@ -32,8 +38,9 @@ QString CQTui::connectMysql(QString Name, QString Host, QString User,
     }
     else
     {
+        string errmsg = mysql_error(conn);
         mysql_close(conn);
-        return "connet db error";
+        return QString::fromStdString(errmsg);
     }
 }
 
@@ -44,6 +51,7 @@ bool CQTui::closeMysql(QString Name)
     if (iter != m_DBConnetor.end())
     {
         mysql_close(m_DBConnetor[name]);
+        m_DBConnetor.erase(iter);
         return true;
     }
     else
@@ -67,7 +75,6 @@ QVariantMap CQTui::queryMysql(QString Name, QString Sql)
         MYSQL_ROW sql_row;
         int res;
 
-        mysql_query(conn, "SET NAMES latin1");
         res = mysql_query(conn, sql.c_str());
         affectRows = mysql_affected_rows(conn);
 
@@ -89,12 +96,12 @@ QVariantMap CQTui::queryMysql(QString Name, QString Sql)
             }
             else
             {
-                errmsg = "no result, query sql:" + Sql;
+                errmsg = mysql_error(conn);
             }
         }
         else
         {
-            errmsg = "mysql query error:" + Sql;
+            errmsg = mysql_error(conn);
         }
     }
     else
@@ -159,15 +166,15 @@ qint16 CQTui::getFileType(QString fileName)
         return 0;
 }
 
-QVariantList CQTui::getFileContent(QString fileName)
+QString CQTui::getFileContent(QString fileName)
 {
-    QVariantList list;
+    QString str = "";
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        list << ("can not open file:" + fileName);
-        return list;
+        str = "can not open file:" + fileName;
+        return str;
     }
 
     QTextStream out(&file);
@@ -175,10 +182,10 @@ QVariantList CQTui::getFileContent(QString fileName)
     while (!out.atEnd())
     {
         QString data = out.readLine();
-        list << data;
+        str += data;
     }
 
-    return list;
+    return str;
 }
 
 bool CQTui::putFileContent(QString fileName, QString content, QString mode)

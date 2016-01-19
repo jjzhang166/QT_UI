@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     CQTui qt;
     view.show();
 
-    view.setUrl(QUrl("html/index.html"));
+    view.setUrl(QUrl("index.html"));
     view.page()->mainFrame()->addToJavaScriptWindowObject(QString("QT"), &qt);
     view.resize(1400,900);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));

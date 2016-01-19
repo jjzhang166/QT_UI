@@ -38,7 +38,7 @@ public slots:
     QString getCurPath();
     QString setCurPath(QString dirName);
     qint16 getFileType(QString fileName);
-    QVariantList getFileContent(QString fileName);
+    QString getFileContent(QString fileName);
     bool putFileContent(QString fileName, QString content, QString mode);
 
 private:
