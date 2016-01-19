@@ -11,8 +11,14 @@ int main(int argc, char *argv[])
     CQTui qt;
     view.show();
 
-    view.setUrl(QUrl("index.html"));
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptEnabled,true);
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptCanCloseWindows,true);
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard,true);
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled,true);
+
     view.page()->mainFrame()->addToJavaScriptWindowObject(QString("QT"), &qt);
+    view.setUrl(QUrl("index.html"));
+
     view.resize(1400,900);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
 
