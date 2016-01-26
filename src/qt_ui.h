@@ -27,8 +27,8 @@ public:
 
 public slots:
     //数据库连接 删除接口
-    QString connectMysql(QString Name, QString Host, QString User,
-                         QString Password, qint16 Port, QString Dbname);
+    QString connectMysql(QString Name, QString Host, qint16 Port, QString User,
+                         QString Password, QString Dbname);
     bool closeMysql(QString Name);
     //数据库操作接口
     QVariantMap queryMysql(QString Name, QString Sql);
@@ -41,6 +41,8 @@ public slots:
     QString getFileContent(QString fileName);
     bool putFileContent(QString fileName, QString content, QString mode);
 
+    //!string tool
+    QString strFilter(QString strData, int begin = 0, int lenth = 0);
 private:
     map<string, MYSQL*> m_DBConnetor;
 };

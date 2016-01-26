@@ -1,4 +1,5 @@
 #include "qt_ui.h"
+#include "ByteBuffer.h"
 
 CQTui::CQTui(QObject *parent):QObject(parent)
 {
@@ -16,8 +17,8 @@ CQTui::~CQTui()
     m_DBConnetor.clear();
 }
 
-QString CQTui::connectMysql(QString Name, QString Host, QString User,
-                            QString Password, qint16 Port, QString Dbname)
+QString CQTui::connectMysql(QString Name, QString Host, qint16 Port, QString User,
+                            QString Password, QString Dbname)
 {
     string name     = Name.toStdString();
     string host     = Host.toStdString();
@@ -86,10 +87,13 @@ QVariantMap CQTui::queryMysql(QString Name, QString Sql)
             {
                 while (!!(sql_row = mysql_fetch_row(result)))
                 {
+                    unsigned long *lengths = mysql_fetch_lengths(result);
                     QStringList tmp;
                     for (int i = 0; i < fieldNum; ++i)
                     {
-                        tmp << sql_row[i];
+                        string data;
+                        data.append(sql_row[i], lengths[i]);
+                        tmp << QString::fromStdString(data);
                     }
                     resultList << QVariant(tmp);
                 }
@@ -208,4 +212,117 @@ bool CQTui::putFileContent(QString fileName, QString content, QString mode)
     QTextStream in(&file);
     in << content << "\r\n";
     return true;
+}
+/*
+ * static int luaA_QueryHexString(lua_State *L)
+{
+    const char* pInValue = ((const char*)  tolua_tostring(L,1,0));
+    int nInLen = ((int)  tolua_tonumber(L,2,0));
+
+    std::vector<uint8> _storage;
+    _storage.reserve(nInLen);
+    _storage.resize(nInLen);
+    memcpy(&_storage[0], pInValue, nInLen);
+    for (size_t i = 0; i < _storage.size(); ++i)
+    {
+        uint8 value = _storage[i];
+        if (value == 0)
+        {
+            _storage.erase(_storage.begin() + i, _storage.end());
+        }
+        else
+        {
+            switch (value)
+            {
+            case 255:
+                _storage[i] = 0;
+                break;
+            case 253:
+            case 254:
+                {
+                    if (_storage[i] == 253 && _storage[i+1] == 254) _storage[i] = 255;
+                    _storage.erase(_storage.begin() + i + 1);
+                }
+                break;
+            }
+        }
+    }
+    lua_pushlstring(L, (const char*)&_storage[0], _storage.size());
+    return 1;
+}
+
+static int luaA_BuildHexString(lua_State *L)
+{
+    const char* pInValue = ((const char*)  tolua_tostring(L,1,0));
+    int nInLen = ((int)  tolua_tonumber(L,2,0));
+
+    std::vector<uint8> _storage;
+    _storage.reserve(nInLen);
+    _storage.resize(nInLen);
+    memcpy(&_storage[0], pInValue, nInLen);
+    for (size_t i = 0; i < _storage.size(); ++i)
+    {
+        uint8 value = _storage[i];
+        switch (value)
+        {
+        case 0:
+            _storage[i] = 255;
+            break;
+        case 253:
+        case 254:
+            _storage.insert(_storage.begin() + (++i), value);
+            break;
+        case 255:
+            {
+                _storage[i++] = 253;
+                _storage.insert(_storage.begin() + i, 254);
+            }
+            break;
+        }
+    }
+    lua_pushlstring(L, (const char*)&_storage[0], _storage.size());
+    return 1;
+}*/
+
+QString CQTui::strFilter(QString strData, int begin, int lenth)
+{
+    string str = strData.toStdString();
+    if (lenth != 0){
+        string ret(str.begin()+begin, str.begin()+begin+lenth);
+        str = ret;
+    }
+
+    std::vector<uint8> _storage;
+    _storage.reserve(str.size());
+    _storage.resize(str.size());
+    memcpy(&_storage[0], str.c_str(), str.size());
+    for (size_t i = 0; i < _storage.size();++i)
+    {
+        uint8 value = _storage[i];
+        if (value == 0)
+        {
+            _storage.erase(_storage.begin() + i, _storage.end());
+        }
+        else
+        {
+
+            switch (value)
+            {
+            case 255:
+                _storage[i] = 0;
+                break;
+            case 253:
+            case 254:
+                {
+                    if (_storage[i] == 253 && _storage[i+1] == 254) _storage[i] = 255;
+                    _storage.erase(_storage.begin() + i + 1);
+                }
+                break;
+            }
+        }
+    }
+
+    string ret;
+    ret.append((const char*)&_storage[0], _storage.size());
+    return QString::fromStdString(ret);;
 }

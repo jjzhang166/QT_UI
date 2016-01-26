@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-01-19T16:02:54
+# Project created by QtCreator 2015-08-27T16:55:02
 #
 #-------------------------------------------------
 
@@ -12,18 +12,23 @@ QT       += sql
 INCLUDEPATH += "../lib3party/json/include"
 LIBS        += "../lib3party/json/lib/json_vc71_libmt.lib"
 INCLUDEPATH += "../lib3party/mysql/include"
-LIBS        += "../lib3party/mysql/lib/opt/libmysql.lib"
+LIBS += "../lib3party/mysql/lib/opt/libmysql.lib"
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qt_ui
+TARGET = qtwidget
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
         widget.cpp \
+    qtwebkit.cpp \
+    mainfunc.cpp \
     qt_ui.cpp
 
 HEADERS  += widget.h \
-    qt_ui.h \
-    ByteBuffer.h
+    qtwebkit.h \
+    mainfunc.h \
+    qt_ui.h
+
+FORMS    += widget.ui
