@@ -1,0 +1,317 @@
+//数据库协议定义文档
+
+message PlayerProtocol 
+{
+	required uint32 sex = 1;
+	required uint32 vip = 2;
+	required uint32 level = 3;
+	required uint32 school = 4;
+	required uint32 mapId = 5;
+	required uint32 posX = 6;
+	required uint32 posY = 7;
+	required uint32 exp = 8;
+	required uint32 id = 9;
+	required uint32 pk = 10;
+	required uint32 worldId = 11;
+	required uint32 battle = 12;
+	required uint32 status = 13;
+	required uint32 userId = 14;
+	required uint32 vital = 15;
+	required uint32 money = 16;
+	required uint32 ingot = 17;
+	required uint32 cash = 18;	
+	required uint32 factionId = 19;
+	required uint32 ingotAll = 20;
+	optional uint32 loginCnt = 21;
+	optional uint32 diedCnt = 22;
+	optional uint32 medallevel = 23;
+	optional uint32 equipLevel = 24;
+	optional uint32 meritorious = 25;
+	optional uint32 glamour = 26;	
+	optional uint32 soulScore = 27;	
+	optional uint32 emailTick = 28;
+	optional uint32 speakTick = 29;
+	optional uint32 lastLogin = 30;	
+	required string name = 40;
+	required string wname = 41;
+	required string openId = 42;
+	required string createDate = 43;
+
+//	optional string email = 3;
+//	repeated PhoneNumber phone = 4;
+}
+
+message PBSkill
+{
+	required uint32 id = 1;
+	required uint32 level = 2;
+	required uint32 exp = 3;
+	required uint32 key = 4;
+}
+
+message SkillProtocol 
+{
+	repeated PBSkill skills = 1;
+}
+
+message PBBuff
+{
+	required uint32 id = 1;
+	required uint32 hurt = 2;
+	required uint32 tick = 3;
+}
+
+message BuffProtocol 
+{
+	repeated PBBuff buffs = 1;
+}
+
+message PBAttr
+{
+	required uint32 propId = 1;
+	required uint32 value = 2;	
+}
+
+message PBItem
+{
+	required uint32 slot = 1;
+	required uint32 protoId = 2;	
+	required uint32 count = 3;
+	required uint32 tlimit = 4;
+	required bool bind = 5;
+	required uint32 strength = 6;
+	required uint32 luck = 7;
+	required uint32 stallprice = 8;
+	required uint32 stalltime = 9;
+
+	repeated PBAttr attrs = 10;
+	required uint64 guid = 11;
+}
+
+message PBItemGroup
+{
+	required uint32 id = 1;
+	required uint32 capacity = 2;
+	repeated PBItem items = 3;
+}
+
+message ItemProtocol 
+{
+	repeated PBItemGroup groups = 1;
+}
+
+message PBIimitAttr
+{
+	required uint32 id = 1;
+	required uint32 count = 2;
+	required uint32 tick = 3;
+}
+
+message LimitProtocol 
+{
+	repeated PBIimitAttr limits = 1;
+}
+
+message StallProtocol 
+{
+	repeated PBItem stalls = 1;
+	repeated PBItem mygots = 2;
+}
+
+
+message PBPvplog 
+{
+	required bool res = 1;
+	required uint32 sch = 2;
+	required uint32 sex = 3;
+	required uint32 rank = 4;
+	required uint32 fight = 5;
+	required uint32 time = 6;	
+	required string name = 7;
+}
+
+message PvpProtocol 
+{
+	required uint32 cding = 1;
+	required uint32 buyCnt = 2;
+	required uint32 fightCnt = 3;
+	required uint32 coolTime = 4;
+	required uint32 history = 5;
+	required uint32 coolTick = 6;	
+	required uint32 timeTick = 7;	
+
+	repeated PBPvplog logs = 8;
+}
+
+message	PBOffReward
+{
+	required uint32 type = 1;
+	required uint32 itemID = 2;
+	required uint32 count = 3;
+}
+
+message DigMineProtocol 
+{
+	required uint32 pick = 1;
+	required uint32 out = 2;
+	required uint32 reward = 3;
+	required uint32 time = 4;
+	required uint32 exp = 5;
+
+	repeated PBOffReward offRew = 6;	
+}
+
+message PBTradeLimit
+{
+	optional uint32 num = 1;
+	optional uint32 id = 2;
+}
+
+message TradeProtocol
+{
+	optional uint32 timetick = 1;
+	repeated PBTradeLimit limits = 2;
+}
+
+message CommonProtocol
+{
+	optional uint32 firstKill = 1;
+	optional uint32 freeBugle = 2;
+	optional uint32 dartCount = 3;
+	optional uint32 dartState = 4;
+	optional uint32 dartStar = 5;
+	optional uint32 dartDate = 6;
+	optional uint32 timeTick = 7;
+	optional bool inlineTest = 8;
+	optional uint32	mark = 9;
+	optional uint32 redBagCount = 10;
+	optional uint32 updateTime = 11;
+	
+
+	repeated uint32 downloads = 12;
+}
+
+message PbBranch 
+{
+	required uint32 branchID = 1;
+	required uint32 state = 2;
+	required string taskTargetState = 3;
+}
+
+message TaskProtocol 
+{
+	required uint32 mainTaskId = 1;
+	required uint32 maintaskState = 2;
+	required string mainTaskTargetState = 3;
+	required uint32 dailyTaskStamp = 4;
+	required uint32 dailyTaskId = 5;
+	required uint32 dailyCurLoop = 6;	
+	optional uint32 dailyRewardId = 7;	
+	required string dailyTaskTargetState = 8;	
+	required uint32 hunterTaskStamp = 9;	
+	required uint32 hunterTaskId = 10;	
+	required uint32 hunterCurLoop = 11;	
+	required uint32 hunterState = 12;	
+	required string hunterTaskTargetState = 13;	
+	optional uint32 finishByIngot = 14;
+	required uint32 annRewardTaskNum = 15;	
+	required uint32 accBlueRewardTaskNum = 16;	
+	required uint32 accPurpleRewardTaskNum = 17;	
+	required uint32 rewardTaskStamp = 18;	
+	required uint32 rewardTaskGUID = 19;	
+	required uint32 rewardTaskId = 20;	
+	required string rewardTaskTargetState = 21;	
+	repeated PbBranch branchs = 22;
+}
+
+message TaskProtocol2
+{
+	repeated uint32 branchDones = 1;
+}
+
+message PbSet 
+{
+	required uint32 id = 1;
+	required uint32 value = 2;
+}
+
+message GameSetProtocol 
+{
+	repeated uint32 guardStep = 1;
+	repeated PbSet gameSets = 2;
+}
+
+message RideProtocol 
+{
+	repeated uint32 rides = 1;
+}
+
+message PBAchieveEvent
+{
+	required uint32 eventType = 1;
+	required uint32 data = 2;
+}
+
+message AchieveEventProtocol
+{
+	repeated PBAchieveEvent achieveEvent = 1;
+}
+
+message PBAchieve
+{
+	required uint32 achieveID = 1;
+	required uint32 finishTime = 2;
+}
+
+message AchieveProtocol
+{
+	repeated PBAchieve achieve = 1;
+}
+
+message PBTitle
+{
+	required uint32 titleID = 1;
+	required uint32 finishTime = 2;
+}
+
+message TitleProtocol
+{
+	required uint32 curTitle = 1;
+	repeated PBTitle titles = 2;
+	repeated PBTitle validTitles = 3;
+	repeated PBAchieveEvent progress = 4;
+}
+
+message AdoreProtocol
+{
+	required string datas = 1;
+}
+
+message FacmemProtocol
+{
+	required string name = 1;
+	required uint32 level = 2;
+	required uint32 sex = 3;
+	required uint32 school = 4;
+	required uint32 ability = 5;
+	optional uint32 activeState = 6;
+	required uint32 contribution = 7;
+	optional uint32 cumContrib = 8;
+	optional uint32 instContrib = 9;
+	required uint32 position = 10;
+	optional uint32 joinTime = 11;
+	optional uint32 weapon = 12;
+	optional uint32 upperBody = 13;
+}
+
+message RelationFlowerProtocol
+{
+	required string flowerStr = 1;
+}
+
+message ActivityProtocol 
+{
+	required uint32 modelID = 1;
+	required uint32 activityID = 2;
+	required string datas = 3;
+}

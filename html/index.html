@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>传世</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./bootstrap-3.3.5-dist/css/dashboard.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">工具</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><!--Dashboard--></a></li>
+            <li><a href="#"><!--Dashboard--></a></li>
+            <li><a href="#"><!--Dashboard--></a></li>
+            <li><a href="#"><!--Dashboard--></a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <font color="white">选择区服： </font>
+            <select class="form-control"  id="reqSelect" onchange="changeArea();">
+                  <option >玩家内测</option>
+                  <option >内测</option>
+                </select>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li ><a href="#">区组管理 </a></li>
+            <li class="active"><a href="#">查看角色<span class="sr-only">(current)</span></a></li>
+          </ul>
+          <!--
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item</a></li>
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+            <li><a href="">More navigation</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+          </ul>
+          -->
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="showOption">
+          <h3 class="page-header">查看角色</h3>
+          <form class="form-inline">
+              <div class="form-group">
+                <label class="sr-only" for="roleID">roleID</label>
+                <input type="text" class="form-control" id="roleID" placeholder="roleID" value="">
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="name">name</label>
+                <input type="text" class="form-control" id="name" placeholder="name" value="道神">
+              </div>
+              <button type="button" class="btn btn-default" onclick="btnLoadRole();">载入数据</button>
+            </form>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="showContent">
+          
+          <h3 class="page-header">查看角色</h3>
+          <ul class="nav nav-tabs" id="showTableName">
+          <!--
+              <li role="presentation" class="active"><a href="#" onclik="showTalbeData('player');">player</a></li>
+              <li role="presentation"><a href="#">task</a></li>
+              <li role="presentation"><a href="#">skill</a></li>
+              -->
+          </ul>
+          <div class="table-responsive" id="showTable" style="padding-top:10px;">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./bootstrap-3.3.5-dist/js/jquery.min.js"></script>
+    <script src="./bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <script src="./bootstrap-3.3.5-dist/js/json2.js"></script>
+
+    <script src="./protobufjs/long.min.js"></script>         <!-- https://raw.github.com/dcodeIO/Long.js/master/dist/Long.min.js -->
+    <script src="./protobufjs/bytebuffer.js"></script> <!-- https://raw.github.com/dcodeIO/ByteBuffer.js/master/dist/ByteBufferAB.min.js -->
+    <script src="./protobufjs/protobuf.min.js"></script>     <!-- https://raw.github.com/dcodeIO/ProtoBuf.js/master/dist/ProtoBuf.min.js -->
+    <script src="./protobufjs/jquery.min.js"></script>
+    <script src="./protobufjs/jquery.base64.js"></script>
+    
+    <script src="./js/util.js"></script>
+  </body>
+</html>
+<script>
+
+var curDB    =  '';
+var roleData = {};
+var charset = 'latin1';
+var areaCfg ={
+    '玩家内测': ['117.121.1.163', 3996, 'root', 'SysLogBak@@)!))!!$'],
+    '内测': ['192.168.101.32', 53306, 'root', 'kuniushareycg']
+}
+$(function(){
+    var html = '';
+    for (var tableName in TableFieldProtobuffCfg){
+        html += '<li role="presentation" id="titleTalbe_'+tableName+'"><a href="#" onclick="showTableData(\''+tableName+'\');">'+tableName+'</a></li>';
+    }
+    $('#showTableName').html(html);
+    
+    $('#titleTalbe_player').addClass('active');
+    changeArea('玩家内测');
+    /*
+    var ret = QT.queryMysql(curDB, 'select * from player where roleID =996000013  limit 1');
+    roleData['task'] = ret;
+    console.log('queryMysql', ret);
+    var html = data2table('player', ret);
+    $('#showTable').html(html);
+    */
+});
+
+function changeArea(){
+    var reqName = $('#reqSelect').val();
+    if (curDB != reqName){
+        curDB = reqName;
+        var cfg = areaCfg[curDB];
+        var err = QT.connectMysql(curDB, cfg[0], cfg[1], cfg[2], cfg[3], 'longwen', charset);
+        //QT.queryMysql(curDB, 'SET NAMES '+charset);
+        if (err != ""){
+            alert(err);
+            return;
+        }
+    }
+    
+    for (var t in TableFieldProtobuffCfg){
+        $('#titleTalbe_'+t).removeClass('active');
+    }
+    $('#titleTalbe_player').addClass('active');
+    $('#showTable').html('');
+}
+
+function btnLoadRole(){
+    var roleID = document.getElementById("roleID").value;//$('#roleID').value;
+    var name = document.getElementById("name").value;//$('#roleID').value;
+    console.log('btnLoadRole roleID', roleID);
+    if (roleID == '' && name == ''){
+        alert('请输入 roleID 后者 name!');
+        return;
+    }
+    if (roleID == ''){
+        var sql = "select roleID from player where Name = '" + name + "'";
+        var ret = QT.queryMysql(curDB, sql);
+        console.log('queryMysql', ret, sql);
+        if (ret.result.length == 0){
+            alert('对应的name找不到');
+            return;
+        }
+        roleID = ret.result[0][0];
+    }
+    for (var tableName in TableFieldProtobuffCfg){
+        var sql = 'select * from ' + tableName +' where roleID = ' + roleID;
+        var ret = QT.queryMysql(curDB, sql);
+        roleData[tableName] = ret;
+        console.log('queryMysql', tableName, ret);
+    }
+    
+    for (var t in TableFieldProtobuffCfg){
+        $('#titleTalbe_'+t).removeClass('active');
+    }
+    $('#titleTalbe_player').addClass('active');
+    var html = data2table('player', roleData['player']);
+    $('#showTable').html(html);
+}
+function showTableData(tableName){
+    if (!roleData.hasOwnProperty(tableName)){
+        alert('还未载入角色数据');
+        return;
+    }
+    for (var t in TableFieldProtobuffCfg){
+        $('#titleTalbe_'+t).removeClass('active');
+    }
+    
+    var html = data2table(tableName, roleData[tableName]);
+    $('#showTable').html(html);
+    $('#titleTalbe_'+tableName).addClass('active');
+}
+</script>

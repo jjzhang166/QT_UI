@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>                                        <!-- Please copy the following files into here: -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<meta content="always" name="referrer">
+<meta name="theme-color" content="#2932e1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    
+<script src="./protobufjs/long.min.js"></script>         <!-- https://raw.github.com/dcodeIO/Long.js/master/dist/Long.min.js -->
+<script src="./protobufjs/bytebuffer.js"></script> <!-- https://raw.github.com/dcodeIO/ByteBuffer.js/master/dist/ByteBufferAB.min.js -->
+<script src="./protobufjs/protobuf.min.js"></script>     <!-- https://raw.github.com/dcodeIO/ProtoBuf.js/master/dist/ProtoBuf.min.js -->
+<script src="./protobufjs/jquery.min.js"></script>
+<script src="./protobufjs/jquery.base64.js"></script>
+
+<script>
+if (typeof dcodeIO === 'undefined' || !dcodeIO.ProtoBuf) {
+    throw(new Error("ProtoBuf.js is not present. Please see www/index.html for manual setup instructions."));
+}
+// Initialize ProtoBuf.js
+var ProtoBuf = dcodeIO.ProtoBuf;
+var a = 'message Message {\
+    required string text = 1;\
+}\
+message PBSkill\
+{\
+	required uint32 id = 1;\
+	required uint32 level = 2;\
+	required uint32 exp = 3;\
+	required uint32 key = 4;\
+}\
+message SkillProtocol \
+{\
+	repeated PBSkill skills = 1;\
+}\
+message PbBranch \
+{\
+	required uint32 branchID = 1;\
+	required uint32 state = 2;\
+	required string taskTargetState = 3;\
+}\
+message TaskProtocol \
+{\
+	required uint32 mainTaskId = 1;\
+	required uint32 maintaskState = 2;\
+	required string mainTaskTargetState = 3;\
+	required uint32 dailyTaskStamp = 4;\
+	required uint32 dailyTaskId = 5;\
+	required uint32 dailyCurLoop = 6;\
+	optional uint32 dailyRewardId = 7;\
+	required string dailyTaskTargetState = 8;	\
+	required uint32 hunterTaskStamp = 9;	\
+	required uint32 hunterTaskId = 10;	\
+	required uint32 hunterCurLoop = 11;	\
+	required uint32 hunterState = 12;	\
+	required string hunterTaskTargetState = 13;	\
+	optional uint32 finishByIngot = 14;\
+	required uint32 annRewardTaskNum = 15;	\
+	required uint32 accBlueRewardTaskNum = 16;	\
+	required uint32 accPurpleRewardTaskNum = 17;	\
+	required uint32 rewardTaskStamp = 18;	\
+	required uint32 rewardTaskGUID = 19;	\
+	required uint32 rewardTaskId = 20;	\
+	required string rewardTaskTargetState = 21;	\
+	repeated PbBranch branchs = 22;\
+}';
+
+var builder = ProtoBuf.loadProto(a);
+var Message = builder.build("Message");
+var TaskProtocol = builder.build("TaskProtocol");
+var PbBranch = builder.build("PbBranch");
+</script>
+</head>
+<body>
+<textarea id="log" style="width: 100%; height: 200px"></textarea><br />
+<input type="text" id="text" value="hello world!" /> <button onclick="send()">确认</button>
+
+<script >
+var log = document.getElementById("log");
+var text = document.getElementById("text");
+
+// Connect to our server: node server.js
+//var socket = new WebSocket("ws://localhost:8080/ws");
+//socket.binaryType = "arraybuffer"; // We are talking binary
+
+function send() {
+    var msg = new Message(text.value);
+    msg.text = 'abc';
+    //console.log(msg, msg.toString());
+    //var buffData = 'CgxoZWxsbyB3b3JsZCE='
+    var buffData = msg.toBase64();
+    //return;
+    console.log('buffData', buffData);
+    var msg2 = Message.decode64(buffData);
+    console.log('msg2', msg2);
+    return;
+    if (socket.readyState == WebSocket.OPEN) {
+        var msg = new Message(text.value);
+        socket.send(msg.toArrayBuffer());
+        log.value += "Sent: "+msg.text+"\n";
+    } else {
+        log.value += "Not connected\n";
+    }
+}
+
+/*socket.onopen = function() {
+    log.value += "Connected\n";
+};
+
+socket.onclose = function() {
+    log.value += "Disconnected\n";
+};
+    
+socket.onmessage = function(evt) {
+    try {
+        // Decode the Message
+        var msg = Message.decode(evt.data);
+        log.value += "Received: "+msg.text+"\n";
+    } catch (err) {
+        log.value += "Error: "+err+"\n";
+    }
+}; */
+
+log.value = ""; // Clear log on reload
+send();
+
+var db = 'test';
+//var ret = QT.connectMysql(db, '192.168.101.32', 53306, 'root', 'kuniushareycg', 'longwen');
+var ret = QT.connectMysql(db, '117.121.1.163', 3996, 'root', 'SysLogBak@@)!))!!$', 'longwen');
+console.log('mysql', ret);
+QT.queryMysql(db, 'SET NAMES latin1');
+ret = QT.queryMysql(db, 'select datas from task where roleID = 996000450 limit 1');
+var ret2 = QT.strFilter(ret.result[0][0]);
+var data = QT.pbcToJs("dbbuff.pb", "TaskProtocol", ret2);
+console.log('dump...', data);
+/*
+for (var k in ret.result[0]){
+    console.log('queryMysql...', ret.result[0][k], 'xx');
+    log.value += ret.result[0][k] + "\n";
+    log.value += ret.errMsg + "\n";
+}*/
+/*
+var ret2 = QT.strFilter(ret.result[0][0]);
+var data = QT.pbcToJs("dbbuff.pb", "TaskProtocol", ret2);
+    console.log('dump...', data);
+for (var k in data){
+    console.log('dump...', k, data[k]);
+}*/
+/*
+var begin = 0;
+console.log('mysql', ret.result[0][1]);
+for (var i = begin; i < begin +80;++i){
+    try{
+        var ret2 = QT.strFilter(ret.result[0][1], i);
+        
+        var task = TaskProtocol.decode(ret2);
+        console.log('task -----', task);
+    }
+    catch(e){
+        console.log('task i', i);
+    }
+}
+//buffer = dcodeIO.ByteBuffer.wrap(ret.result[0][1]);
+//buffer.readBytes(5);
+var srcTask = new PbBranch(1, 0, 'abcdef');
+var abData = srcTask.toArrayBuffer();
+var buffData = abData.toString();
+var newBuff = ProtoBuf.ByteBuffer.wrap(abData);
+
+console.log('srcTask len', abData, newBuff, buffData);
+var buffData2 = QT.strFilter2(buffData);
+var a = buffData2
+var b = QT.strFilter(a);
+console.log('task len', a.length, b.length);
+var task = PbBranch.decode(newBuff);
+console.log('task', task);
+*/
+</script>
+</body>
+</html>

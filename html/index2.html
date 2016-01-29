@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="container">
+<div class="row">
+    <div class="col-md-2">
+        <div id="demo">
+            <div class="list-group">
+                <li class="item"><a href="#" class="list-group-item active">交易数据</a></li>
+                <li class="item"><a href="#" class="list-group-item">错误日志</a></li>
+                <li class="item"><a href="#" class="list-group-item">Item 3</a></li>
+                <li class="item"><a href="#" class="list-group-item">Item 4</a></li>
+                <li class="item"><a href="#" class="list-group-item">Item 5</a></li>
+            </div>
+        </div> 
+    </div>
+    <div class="col-md-10">
+	    <div class="container">
+            <div class="row">
+                <div id="item0" class="main">
+				  <div>
+                    <button type="button" class="btn btn-success" id="config1">加载区服</button>&nbsp;&nbsp;
+                    <select name="select1" id="select1"><option>区服列表</option></select>
+                    &nbsp;&nbsp;
+
+                    <button type="button" class="btn btn-success" id="config2">加载物品</button>&nbsp;&nbsp;
+                    <select name="select2" id="select2"><option>主类别</option></select>
+                    &nbsp;&nbsp;
+
+                    <select name="select3" id="select3"><option>分类别</option></select>
+                    &nbsp;&nbsp;
+
+                    <select name="select4" id="select4"><option>物品名</option></select>
+                    &nbsp;&nbsp;
+                    
+                    <input class="form_datetime" size="16" type="text" value="" readonly placeholder="输人起始时间" id="starttime1">
+	                &nbsp;&nbsp;
+	                    
+	                <input class="form_datetime" size="16" type="text" value="" readonly placeholder="输人截止时间" id="endtime1">
+                    &nbsp;&nbsp;
+                     
+                    <button type="button" class="btn btn-success" id="show">显示图表</button>                    
+                  </div>
+                  <div class="col-md-10">
+	                <div id="echart0" style="height:400px" class="main"></div>
+	              </div>
+				</div>
+			</div>
+			<div class="row">
+				<div id="item1" class="main">
+				  <div>
+				    <select name="select5" id="select5"></select>&nbsp;&nbsp;
+					<select name="select6" id="select6"></select>&nbsp;&nbsp;
+					每个区服显示条数:<input name="text1" id="text1" value="5"></input>&nbsp;&nbsp;
+					<input class="form_datetime" size="17" type="text" value="" readonly placeholder="输人起始时间(可选)" id="starttime2">
+	                &nbsp;&nbsp;
+	                    
+	                <input class="form_datetime" size="17" type="text" value="" readonly placeholder="输人截止时间(可选)" id="endtime2">
+                    &nbsp;&nbsp;
+                     
+                    <button type="button" class="btn btn-success" id="dbshow">显示日志</button>     
+				  </div>
+				  <br>
+				  <br>
+				  <div class="col-md-10">
+	                <div id="data1">
+					    <table id="table1"></table> 
+                        <div id="page1"></div>
+						<div id="test1"></div>
+					</div>
+	              </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
