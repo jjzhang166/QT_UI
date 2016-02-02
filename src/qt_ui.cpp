@@ -410,6 +410,12 @@ static void jsToPbcMemsage(struct pbc_wmessage *pbuff, QVariantMap& srcMap)
         else if (pbcType == "string"){
             pbc_wmessage_string(pbuff, strKey.c_str(), pbcVal.c_str(), pbcVal.size());
         }
+        else if (pbcType == "real"){
+            pbc_wmessage_real(pbuff, strKey.c_str(), ::atof(pbcVal.c_str()));
+        }
+        else if (pbcType == "bool"){
+            pbc_wmessage_string(pbuff, strKey.c_str(), pbcVal.c_str(), pbcVal.size());
+        }
         else if (pbcType == "repeated"){
             QVariantMap repeatedMap = tmpList[0].toMap();
 
