@@ -429,6 +429,11 @@ static void jsToPbcMemsage(struct pbc_wmessage *pbuff, QVariantMap& srcMap)
                     QVariantMap childMessage = childVal[0].toMap();
                     jsToPbcMemsage(pbs, childMessage);
                 }
+                else if (childType == "int"){
+                    pbc_wmessage* pbs = pbc_wmessage_message(pbuff , strKey.c_str());
+                    string strChildInt= childVal[0].toString().toStdString();
+                    pbc_wmessage_integer(pbuff, strKey.c_str(), ::atoi(strChildInt.c_str()), 0);
+                }
             }
         }
     }
