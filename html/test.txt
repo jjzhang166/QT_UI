@@ -1,111 +1,120 @@
-﻿0
-4
-{{{roleId=902000026,name="朱鸿畴"},{roleId=900000036,name="严成周"},{roleId=900000010,name="杜浩荡"}}}
-900000001
- �jnull(�0�P�H�Bnull�N��`�x��null������{}X���
-900000001
- �jnull(�0�P�H�Bnull�N��`�x��null������{}X���
-900000001
- �jnull(�0�P�H�Bnull�N��`�x��null������{}X���
-900000001
+﻿pbcKey=achieveEvent,pbcVal=,pbcType=repeated
 
+pbcKey=data,pbcVal=20,pbcType=int
 
-�� 
+pbcKey=eventType,pbcVal=31,pbcType=int
 
-�� �
-	�x 
-	�� 
-998003928
+pbcKey=data,pbcVal=1,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
-998003928
+pbcKey=eventType,pbcVal=22,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
-998003928
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
-998003928
+pbcKey=data,pbcVal=20,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=eventType,pbcVal=31,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=data,pbcVal=1,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=eventType,pbcVal=22,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=data,pbcVal=20,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=eventType,pbcVal=31,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=data,pbcVal=1,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=eventType,pbcVal=22,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=data,pbcVal=20,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=eventType,pbcVal=31,pbcType=int
 
-	�� 
-	� 
-	�� �
-	� �
-	�� �
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=2,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=2,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+
+pbcKey=achieveEvent,pbcVal=,pbcType=repeated
+
+pbcKey=data,pbcVal=20,pbcType=int
+
+pbcKey=eventType,pbcVal=31,pbcType=int
+
+pbcKey=data,pbcVal=1,pbcType=int
+
+pbcKey=eventType,pbcVal=22,pbcType=int
+

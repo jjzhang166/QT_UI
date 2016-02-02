@@ -43,4 +43,5 @@ HEADERS  += widget.h \
     qt_ui.h \
     ByteBuffer.h \
     ../lib3party/pbc/pbc.h \
-    ../lib3party/pbc/proto.h
+    ../lib3party/pbc/proto.h \
+    pbcutil.h

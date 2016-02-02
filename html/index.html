@@ -43,8 +43,8 @@
           <form class="navbar-form navbar-right">
             <font color="white">选择区服： </font>
             <select class="form-control"  id="reqSelect" onchange="changeArea();">
-                  <option >玩家内测</option>
                   <option >内测</option>
+                  <option >玩家内测</option>
                 </select>
           </form>
         </div>
@@ -82,9 +82,11 @@
               </div>
               <div class="form-group">
                 <label class="sr-only" for="name">name</label>
-                <input type="text" class="form-control" id="name" placeholder="name" value="道神">
+                <input type="text" class="form-control" id="name" placeholder="name" value="钱思聪">
               </div>
               <button type="button" class="btn btn-default" onclick="btnLoadRole();">载入数据</button>
+              <!-- <button type="button" class="btn btn-default" onclick="btnSaveToDb();">保存数据</button> -->
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg" onclick="btnSaveToDb();">保存数据</button>
             </form>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="showContent">
@@ -100,15 +102,40 @@
           <div class="table-responsive" id="showTable" style="padding-top:10px;">
             
           </div>
+          
+          <!-- Button trigger modal -->
+          <!-- Modal -->
+          <!-- Large modal -->
+          
+          <div   id="myModal" class="modal  bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">保存数据</h4>
+                  </div>
+                  <div class="modal-body" id="dialogBody">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"   data-dismiss="modal" onclick="doSaveDataToDb();">确认</button>
+                  </div>
+                </div>
+              </div>
+          </div>
+
         </div>
       </div>
     </div>
+
+    
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./bootstrap-3.3.5-dist/js/jquery.min.js"></script>
     <script src="./bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    
     <script src="./bootstrap-3.3.5-dist/js/json2.js"></script>
 
     <script src="./protobufjs/long.min.js"></script>         <!-- https://raw.github.com/dcodeIO/Long.js/master/dist/Long.min.js -->
@@ -122,13 +149,17 @@
 </html>
 <script>
 
-var curDB    =  '';
+var gCurDB    =  '';
+var gCurRoleID= '';
+var gCurTalbe = '';
 var roleData = {};
-var charset = 'latin1';
+var charset = 'utf8';
 var areaCfg ={
     '玩家内测': ['117.121.1.163', 3996, 'root', 'SysLogBak@@)!))!!$'],
-    '内测': ['192.168.101.32', 53306, 'root', 'kuniushareycg']
+    //'内测': ['192.168.101.32', 53306, 'root', 'kuniushareycg']
+    '内测': ['115.182.4.212', 53306, 'root', 'SysLogBak@@)!))!!$']
 }
+
 $(function(){
     var html = '';
     for (var tableName in TableFieldProtobuffCfg){
@@ -137,9 +168,9 @@ $(function(){
     $('#showTableName').html(html);
     
     $('#titleTalbe_player').addClass('active');
-    changeArea('玩家内测');
+    changeArea('内测');
     /*
-    var ret = QT.queryMysql(curDB, 'select * from player where roleID =996000013  limit 1');
+    var ret = QT.queryMysql(gCurDB, 'select * from player where roleID =996000013  limit 1');
     roleData['task'] = ret;
     console.log('queryMysql', ret);
     var html = data2table('player', ret);
@@ -149,11 +180,11 @@ $(function(){
 
 function changeArea(){
     var reqName = $('#reqSelect').val();
-    if (curDB != reqName){
-        curDB = reqName;
-        var cfg = areaCfg[curDB];
-        var err = QT.connectMysql(curDB, cfg[0], cfg[1], cfg[2], cfg[3], 'longwen', charset);
-        //QT.queryMysql(curDB, 'SET NAMES '+charset);
+    if (gCurDB != reqName){
+        gCurDB = reqName;
+        var cfg = areaCfg[gCurDB];
+        var err = QT.connectMysql(gCurDB, cfg[0], cfg[1], cfg[2], cfg[3], 'longwen', charset);
+        //QT.queryMysql(gCurDB, 'SET NAMES '+charset);
         if (err != ""){
             alert(err);
             return;
@@ -165,6 +196,7 @@ function changeArea(){
     }
     $('#titleTalbe_player').addClass('active');
     $('#showTable').html('');
+    
 }
 
 function btnLoadRole(){
@@ -177,7 +209,7 @@ function btnLoadRole(){
     }
     if (roleID == ''){
         var sql = "select roleID from player where Name = '" + name + "'";
-        var ret = QT.queryMysql(curDB, sql);
+        var ret = QT.queryMysql(gCurDB, sql);
         console.log('queryMysql', ret, sql);
         if (ret.result.length == 0){
             alert('对应的name找不到');
@@ -185,9 +217,10 @@ function btnLoadRole(){
         }
         roleID = ret.result[0][0];
     }
+    gCurRoleID = roleID;
     for (var tableName in TableFieldProtobuffCfg){
         var sql = 'select * from ' + tableName +' where roleID = ' + roleID;
-        var ret = QT.queryMysql(curDB, sql);
+        var ret = QT.queryMysql(gCurDB, sql);
         roleData[tableName] = ret;
         console.log('queryMysql', tableName, ret);
     }
@@ -198,6 +231,7 @@ function btnLoadRole(){
     $('#titleTalbe_player').addClass('active');
     var html = data2table('player', roleData['player']);
     $('#showTable').html(html);
+    gCurTalbe = 'player';
 }
 function showTableData(tableName){
     if (!roleData.hasOwnProperty(tableName)){
@@ -211,5 +245,126 @@ function showTableData(tableName){
     var html = data2table(tableName, roleData[tableName]);
     $('#showTable').html(html);
     $('#titleTalbe_'+tableName).addClass('active');
+    gCurTalbe = tableName;
 }
+function btnSaveToDb(){
+    var tableName = gCurTalbe;
+    if (!roleData.hasOwnProperty(tableName)){
+        alert('还未载入角色数据');
+        return;
+    }
+    var html = '';
+    var ret = '<table class="table table-bordered"><tbody>';
+    ret += '<thead><tr><th>字段</th><th>是否保存</th></tr></thead>';
+    var dbRet = roleData[tableName];
+    for (var j = 0; j < dbRet.fieldNames.length; ++j){
+        var fieldName = dbRet.fieldNames[j];
+        if (fieldName.toLowerCase() == 'roleid'){
+            continue;
+        }
+        ret += '<tr><td>' + fieldName + '</td>';
+        ret += '<td><input id="checkbox_'+fieldName+'" type="checkbox"></td></tr>';
+    }
+    ret += '</tbody></table>'
+    html = ret;
+    $('#dialogBody').html(html);
+}
+function getFieldNewData(tableName, fieldName){
+    return 'TODO';
+}
+function doSaveDataToDb(){
+    var tableName = gCurTalbe;
+    if (!roleData.hasOwnProperty(tableName)){
+        alert('还未载入角色数据');
+        return;
+    }
+    var dbRet = roleData[tableName];
+    var toSaveField = {};
+    
+    for (var j = 0; j < dbRet.fieldNames.length; ++j){
+        var fieldName = dbRet.fieldNames[j];
+        if (fieldName.toLowerCase() == 'roleid'){
+            continue;
+        }
+        var fieldDest = "checkbox_"+fieldName;
+        var checkbox = document.getElementById(fieldDest);//alert(checkbox.checked);//是否被选中
+        if (checkbox.checked){
+            toSaveField[fieldName] = '';
+        }
+    }
+    
+    if (toSaveField.length == 0){
+        alert('请选择要保存的字段！');
+        return;
+    }
+    var updateRowNum = 0;
+    for (var i = 0; i < dbRet.result.length; ++i){
+        var checkbox = document.getElementById('checkboxRow_'+i);//alert(checkbox.checked);//是否被选中
+        if (checkbox == null || !checkbox.checked){
+            continue;
+        }
+        updateRowNum += 1;
+        var sql   = 'update ' + tableName + ' set ';
+        var dataSql = '';
+        var where = '';
+        
+        var row = dbRet.result[i];
+        for (var j = 0; j < dbRet.fieldNames.length; ++j){
+            var fieldName = dbRet.fieldNames[j];
+            var pbName = getPBFieldProtoName(tableName, fieldName);
+            if (pbName == ''){//!当做where 语句,必须不是pb类型
+                if (where == ''){
+                    where += ' where ';
+                }
+                else{
+                    where += ' and ';
+                }
+                where += " " + fieldName + " = '" + charsetConvert(row[j])+"'";
+            }
+            if (toSaveField.hasOwnProperty(fieldName)){//!设置新值
+                if (dataSql != ''){
+                    dataSql += ',';
+                }
+                if (pbName == ''){
+                    var idName = 'Edit-'+i+'-' + tableName + '-' + fieldName;
+                    dataSql += " " + fieldName + " = '" + $('#'+idName).val() + "'";
+                }
+                else{
+                    var pbdata = cachePbcData[tableName][fieldName];
+                    var newPbData = getPBCFieldData(pbdata, 0, 'EditPBC');
+                    var newMapData= QT.jsToPbc("dbbuff.pb", getPBFieldProtoName(tableName, fieldName), newPbData);
+                    var newStrData = QT.strEncode(newMapData['data']);
+                    console.log('doSaveDataToDb newPbData', newMapData);
+                    dataSql += " " + fieldName + " = '" + newStrData + "'";                    
+                }
+            }
+        }
+            
+        sql += dataSql + where;
+        var ret = QT.queryMysql(gCurDB, sql);
+        console.log('doSaveDataToDb queryMysql', sql, ret);
+        //console.log('doSaveDataToDb toSaveField', toSaveField, sql);
+    }
+    if (updateRowNum == 0)
+        alert('没有选中要更新的行');
+}
+
+function getPBCFieldData(pbdata, level, preIdName){
+    var ret = {};
+    for (var fieldName in pbdata){
+        var fieldData = pbdata[fieldName][0];
+        var fieldType = pbdata[fieldName][1];
+        var idName = preIdName +'-'+ level + '-' + fieldName;
+        if (typeof fieldData === 'object'){
+            var childRet = getPBCFieldData(fieldData, level + 1, idName);
+            ret[fieldName] = [childRet, fieldType];
+        }
+        else{
+            //console.log('doSaveDataToDb getPBCFieldData idName', idName);
+            ret[fieldName] = [document.getElementById(idName).value, fieldType];
+        }
+    }
+    return ret;
+}
+
 </script>

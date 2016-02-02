@@ -47,6 +47,8 @@ public slots:
 
     QVariantMap pbcToJs(QString protoData, QString strVal, QString strData);
     QString charestDecode(QString strData);
+
+    QVariantMap jsToPbc(QString protoFile, QString strMessName, QVariantMap srcMap);
 private:
     map<string, MYSQL*> m_DBConnetor;
 };

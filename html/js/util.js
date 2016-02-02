@@ -18,6 +18,7 @@ var TableFieldProtobuffCfg = {
     'adore':{'datas': 'AdoreProtocol'},
     'relation_flowerrd':{'datas': 'RelationFlowerProtocol'},
 }
+var cachePbcData = {}; //!table -> field -> dict
 
 function getPBFieldProtoName(tableName, field){
     if (TableFieldProtobuffCfg.hasOwnProperty(tableName)){
@@ -28,6 +29,10 @@ function getPBFieldProtoName(tableName, field){
     }
     return '';
 }
+function charsetConvert(data){
+    return data;
+    return QT.charestDecode(data);
+}
 function data2table(tableName, dbRet){
     var html = '';
     for (var i = 0; i < dbRet.result.length; ++i){
@@ -35,16 +40,26 @@ function data2table(tableName, dbRet){
         var ret = '<table class="table table-bordered"><tbody>';
         for (var j = 0; j < dbRet.fieldNames.length; ++j){
             var fieldName = dbRet.fieldNames[j];
-            ret += '<tr><td>' + fieldName + '</td>';
+            if (j == 0)
+                ret += '<tr><td>' + fieldName + '<input id="checkboxRow_'+i+'" type="checkbox" checked>'+'</td>';
+            else
+                ret += '<tr><td>' + fieldName +'</td>';
             var pbName = getPBFieldProtoName(tableName, fieldName);
             if (pbName == ''){
-                ret += '<td>' + QT.charestDecode(row[j]) + '</td></tr>';
+                //ret += '<td>' + charsetConvert(row[j]) + '</td></tr>';
+                var idName = 'Edit-'+i+'-' + tableName + '-' + fieldName;
+                ret += '<td><input  type="text" class="form-control" id="'+idName+'" placeholder="" value="'+charsetConvert(row[j])+'"></td></tr>';
+                
             }
             else{
-                var ret2 = QT.strFilter(row[j]);
+                var ret2 = row[j];
                 var data = QT.pbcToJs("dbbuff.pb", pbName, ret2);
                 console.log('pbcToJs', data);
-                var childTable = pb2table(data);
+                if (!cachePbcData.hasOwnProperty(tableName)){
+                    cachePbcData[tableName] = {};
+                }
+                cachePbcData[tableName][fieldName] = data;
+                var childTable = pb2table(data, 0, 'EditPBC');
                 ret += '<td>' + childTable + '</td></tr>';
             }
         }
@@ -54,20 +69,24 @@ function data2table(tableName, dbRet){
     return html;
 }
 
-function pb2table(pbdata){
-    var html = '';JSON.stringify(pbdata);
+function pb2table(pbdata, level, preIdName){
+    var html = '';//JSON.stringify(pbdata);
     
     var ret = '<table class="table table-bordered"><tbody>';
     for (var fieldName in pbdata){
-        var fieldData = pbdata[fieldName];
+        
+        //console.log('pb2table', fieldName, pbdata[fieldName]);
+        var fieldData = pbdata[fieldName][0];
         ret += '<tr><td>' + fieldName + '</td>';
+        var idName = preIdName +'-'+ level + '-' + fieldName;
         
         if (typeof fieldData === 'object'){
-            console.log('pb2table', fieldData);
-            ret += '<td>' + pb2table(fieldData) + '</td></tr>';
+            ret += '<td>' + pb2table(fieldData, level + 1, idName) + '</td></tr>';
         }
         else{
-            ret += '<td>' + QT.charestDecode(fieldData) + '</td></tr>';
+            //ret += '<td>' + charsetConvert(fieldData) + '</td></tr>';
+            //console.log('pb2table idName', idName);
+            ret += '<td><input  type="text" class="form-control" id="'+idName+'" placeholder="" value="'+ charsetConvert(fieldData) +'"></td></tr>';
         }
         
     }

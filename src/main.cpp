@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
     QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptCanCloseWindows, true);
     QWebSettings::globalSettings()->setAttribute(QWebSettings::AutoLoadImages,true);
 
-    //QWebSettings::globalSettings()->setDefaultTextEncoding("utf-8");
+    QWebSettings::globalSettings()->setDefaultTextEncoding("utf-8");
     //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf8"));
 
     //QTextCodec *codec=QTextCodec::codecForName("utf8");
     //QTextCodec::setCodecForLocale(codec);
