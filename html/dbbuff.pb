@@ -1,6 +1,6 @@
 
-ô
-dbbuff.proto"¸
+Ñ
+dbbuff.proto"Ö
 PlayerProtocol
 sex (
 vip (
@@ -28,7 +28,7 @@
 loginCnt (
 diedCnt (
 
-medallevel (
+medalLevel (
 
 equipLevel (
 meritorious (
@@ -41,7 +41,9 @@ equipLevel (
 wname) (	
 openId* (	
 
-createDate+ (	">
+createDate+ (	
+curhp, (
+curmp- (">
 PBSkill
 
 id (
@@ -107,18 +109,22 @@ stallprice (
 history (
 coolTick (
 timeTick (
-logs (2	.PBPvplog":
+logs (2	.PBPvplog"Z
 PBOffReward
 type (
 itemID (
-count ("u
+count (
+bind (
+strength ("“
 DigMineProtocol
 pick (
 out (
 reward (
 time (
-exp (
-offRew (2.PBOffReward"'
+exp (
+new (
+digTime (
+offRew (2.PBOffReward"'
 PBTradeLimit
 num (
 
