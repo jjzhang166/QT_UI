@@ -43,8 +43,9 @@
           <form class="navbar-form navbar-right">
             <font color="white">选择区服： </font>
             <select class="form-control"  id="reqSelect" onchange="changeArea();">
-                  <option >内测</option>
+                 <!-- <option >内测utf8</option>
                   <option >玩家内测</option>
+                  <option >开发</option> -->
                 </select>
           </form>
         </div>
@@ -82,11 +83,13 @@
               </div>
               <div class="form-group">
                 <label class="sr-only" for="name">name</label>
-                <input type="text" class="form-control" id="name" placeholder="name" value="钱思聪">
+                <input type="text" class="form-control" id="name" placeholder="name" value="test_2525">
               </div>
               <button type="button" class="btn btn-default" onclick="btnLoadRole();">载入数据</button>
               <!-- <button type="button" class="btn btn-default" onclick="btnSaveToDb();">保存数据</button> -->
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg" onclick="btnSaveToDb();">保存数据</button>
+              <button type="button" class="btn btn-info"  onclick="btnExport();">导出角色</button>
+              <button type="button" class="btn btn-warning"  onclick="btnImport();">导入角色</button>
             </form>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="showContent">
@@ -155,9 +158,9 @@ var gCurTalbe = '';
 var roleData = {};
 var charset = 'utf8';
 var areaCfg ={
-    '玩家内测': ['117.121.1.163', 3996, 'root', 'SysLogBak@@)!))!!$'],
+    '内测utf8': ['115.182.4.212', 53306, 'root', 'SysLogBak@@)!))!!$'],
+    '玩家内测1': ['117.121.1.163', 3996, 'root', 'SysLogBak@@)!))!!$'],
     '开发': ['192.168.101.32', 53306, 'root', 'kuniushareycg']
-    '内测utf8': ['115.182.4.212', 53306, 'root', 'SysLogBak@@)!))!!$']
 }
 
 $(function(){
@@ -168,7 +171,16 @@ $(function(){
     $('#showTableName').html(html);
     
     $('#titleTalbe_player').addClass('active');
-    changeArea('内测');
+
+    var html = '';
+    for (var areaName in areaCfg){
+        html += '<option>' + areaName + '</option>';
+    }
+    $('#reqSelect').html(html);
+    for (var areaName in areaCfg){
+        changeArea(areaName);
+        break;
+    }
     /*
     var ret = QT.queryMysql(gCurDB, 'select * from player where roleID =996000013  limit 1');
     roleData['task'] = ret;
@@ -180,6 +192,7 @@ $(function(){
 
 function changeArea(){
     var reqName = $('#reqSelect').val();
+
     if (gCurDB != reqName){
         gCurDB = reqName;
         var cfg = areaCfg[gCurDB];
@@ -366,5 +379,110 @@ function getPBCFieldData(pbdata, level, preIdName){
     }
     return ret;
 }
+//!导出角色
+function btnExport(){
+    if (!roleData.hasOwnProperty('player')){
+        alert('还未载入角色数据');
+        return;
+    }
 
+    var newRoleId = gCurRoleID;
+    //newRoleId = 1234567;
+    var content = '';
+    var roldName = roleData['player'].result[0][5];
+    for (var tableName in roleData){
+        var dbRet = roleData[tableName];
+
+        for (var i = 0; i < dbRet.result.length; ++i) {
+            var sql = 'insert into ' + tableName + ' set ';
+            var dataSql = '';
+            var where = '';
+
+            var row = dbRet.result[i];
+            for (var j = 0; j < dbRet.fieldNames.length; ++j) {
+                var fieldName = dbRet.fieldNames[j];
+                var val       = row[j];
+                if (newRoleId != 0 && fieldName.toLowerCase() == 'roleid'){
+                    val = newRoleId;
+                }
+                else if (tableName == 'player' && fieldName.toLowerCase() == 'id'){
+                    continue;
+                }
+                if (dataSql != ''){
+                    dataSql += ',';
+                }
+                dataSql += " " + fieldName + " = '" +val + "'";
+            }
+            sql += dataSql;
+            content += 'delete from ' + tableName + ' where RoleID = ' + newRoleId + ';#########\r\n';
+            content += sql + ';#########\r\n';
+        }
+    }
+    //!user表要另外的导入才可以
+    var userId = roleData['player'].result[0][2];
+    var sqlUser = 'select * from user where UserID = ' + userId;
+    var dbRet   = QT.queryMysql(gCurDB, sqlUser);
+    var sql = 'insert into user set ';
+    var dataSql = '';
+    var where = '';
+    console.log('sqlUser', dbRet);
+    var row = dbRet.result[0];
+    for (var j = 0; j < dbRet.fieldNames.length; ++j) {
+        var fieldName = dbRet.fieldNames[j];
+        var val       = row[j];
+        if (fieldName.toLowerCase() == 'id'){
+            continue;
+        }
+        if (dataSql != ''){
+            dataSql += ',';
+        }
+        dataSql += " " + fieldName + " = '" +val + "'";
+    }
+    sql += dataSql;
+    content += 'delete from user where UserID = ' + userId + ';#########\r\n';
+    content += sql + ';#########\r\n';
+
+    var fileName = roldName + '.txt';
+    QT.putFileContent(fileName, content, 'w');
+    alert('导出成功！文件：'+QT.getCurPath()+'/'+fileName);
+}
+
+function  btnImport(){
+    var name = document.getElementById("name").value;
+    if (name == ''){
+        alert('请输入要导入的角色名!');
+        return;
+    }
+    if (!confirm('将会覆盖原有角色! 确认要导入角色:'+name+'?')){
+        return;
+    }
+    allFile = QT.listDir('./');
+    console.log('btnImport', allFile);
+    var fileName = name + '.txt';
+    var existFile = false;
+    for (var k in allFile){
+        if (allFile[k] == fileName){
+            existFile = true;
+            break;
+        }
+    }
+    if (!existFile){
+        alert('当前目录没有找到角色数据文件！');
+        return;
+    }
+    var content = QT.getFileContent('./' + fileName);
+    var sqlList = content.split(";#########");
+    for (var m in sqlList){
+        var sql = sqlList[m];
+        if (sql == '' || sql == '\r\n')
+            continue;
+        console.log('sql', sql);
+        var ret = QT.queryMysql(gCurDB, sql);// 'select * from player where roleID =996000013  limit 1'
+        if (ret.errMsg != ''){
+            alert(ret.errMsg +' sql:' + sql);
+            return;
+        }
+    }
+    alert('导入成功！');
+}
 </script>
